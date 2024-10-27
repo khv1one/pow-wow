@@ -1,0 +1,65 @@
+openapi: 3.0.0
+info:
+  title: Word of Wisdom TCP Server
+  version: 1.0.0
+  description: A TCP api protected by Proof of Work (PoW) that returns wisdom quotes after challenge verification.
+
+servers:
+  - url: http://localhost:8080
+    description: Local development api
+
+paths:
+  /challenge:
+    get:
+      summary: Get PoW challenge
+      operationId: GetChallenge
+      responses:
+        '200':
+          description: Challenge generated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  challenge:
+                    type: string
+                    description: The PoW challenge for the client to solve
+
+  /verify:
+    post:
+      summary: Verify PoW solution
+      operationId: VerifySolution
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                challenge:
+                  type: string
+                  description: The challenge string provided by the api
+                nonce:
+                  type: string
+                  description: The solution (nonce) provided by the client
+      responses:
+        '200':
+          description: PoW solution verified successfully, returns wisdom quote
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  quote:
+                    type: string
+                    description: The wisdom quote returned after successful verification
+        '400':
+          description: Invalid PoW solution
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message
