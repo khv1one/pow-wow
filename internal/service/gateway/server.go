@@ -15,10 +15,10 @@ type Supervisor interface {
 }
 
 type Server struct {
-	challenger Challenger
-	supervisor Supervisor
+	Challenger Challenger
+	Supervisor Supervisor
 }
 
 func NewServer(c Challenger, s Supervisor) *Server {
-	return &Server{challenger: c, supervisor: s}
+	return &Server{Challenger: c, Supervisor: s}
 }

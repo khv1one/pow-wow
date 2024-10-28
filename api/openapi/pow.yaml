@@ -53,9 +53,6 @@ paths:
             schema:
               type: object
               properties:
-                challenge:
-                  type: string
-                  description: The challenge string provided by the api
                 nonce:
                   type: string
                   description: The solution (nonce) provided by the client

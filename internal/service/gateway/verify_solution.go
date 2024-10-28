@@ -1,7 +1,9 @@
 package gateway
 
 import (
+	"context"
 	"net/http"
+	"time"
 
 	"github.com/labstack/echo/v4"
 
@@ -14,13 +16,14 @@ func (s *Server) VerifySolution(c echo.Context, params pow.VerifySolutionParams)
 		Nonce string `json:"nonce"`
 	}
 
-	ctx := c.Request().Context()
+	ctx, cancel := context.WithTimeout(c.Request().Context(), time.Second*1)
+	defer cancel()
 
 	if err := c.Bind(&req); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request"})
 	}
 
-	quote, err := s.supervisor.Oversee(ctx, params.XRemark, req.Nonce)
+	quote, err := s.Supervisor.Oversee(ctx, params.XRemark, req.Nonce)
 	if err == nil {
 		response := map[string]string{
 			"quote": quote,

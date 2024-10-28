@@ -1,17 +1,20 @@
 package gateway
 
 import (
+	"context"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/labstack/echo/v4"
 )
 
 // GetChallenge: Generates a random challenge for the PoW
 func (s *Server) GetChallenge(c echo.Context) error {
-	ctx := c.Request().Context()
+	ctx, cancel := context.WithTimeout(c.Request().Context(), time.Second*1)
+	defer cancel()
 
-	remark, challenge, err := s.challenger.MakeChallenge(ctx)
+	remark, challenge, err := s.Challenger.MakeChallenge(ctx)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Challenge emit failed"})
 	}
