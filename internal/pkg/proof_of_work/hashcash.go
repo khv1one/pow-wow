@@ -1,17 +1,19 @@
 package proof_of_work
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
 	"fmt"
-	"github.com/littlebugger/pow-wow/internal/service/entity"
 	"math/rand"
 	"strings"
 	"time"
+
+	"crypto/sha256"
+	"encoding/hex"
+
+	"github.com/littlebugger/pow-wow/internal/service/entity"
 )
 
 // TODO: make difficulty an argument
-const difficulty = 12
+const difficulty = 6
 
 type Hashcash struct{}
 
@@ -42,7 +44,7 @@ func verifyPoW(challenge entity.Challenge, nonce string) bool {
 }
 
 // SolveChallenge attempts to find a nonce that results in a hash with the required number of leading zeros
-func SolveChallenge(challenge entity.Challenge) (string, error) {
+func SolveChallenge(challenge entity.Challenge) string {
 	leadingZeros := strings.Repeat("0", challenge.Difficulty)
 	var nonce int64
 
@@ -54,8 +56,24 @@ func SolveChallenge(challenge entity.Challenge) (string, error) {
 		// Convert the hash to a hex string and check if it meets the difficulty requirement
 		hashStr := hex.EncodeToString(hash[:])
 		if strings.HasPrefix(hashStr, leadingZeros) {
-			return fmt.Sprintf("%d", nonce), nil
+			return fmt.Sprintf("%d", nonce)
 		}
 		nonce++
 	}
+}
+
+// SolveChallengeWithNonce same as SolveChallenge but with different interface for better scalability.
+func SolveChallengeWithNonce(challenge entity.Challenge, nonce int64) error {
+	leadingZeros := strings.Repeat("0", challenge.Difficulty)
+
+	// Generate a potential solution by concatenating the challenge and nonce
+	input := fmt.Sprintf("%s%d", challenge.Task, nonce)
+	hash := sha256.Sum256([]byte(input))
+
+	hashStr := hex.EncodeToString(hash[:])
+	if strings.HasPrefix(hashStr, leadingZeros) {
+		return nil
+	}
+
+	return fmt.Errorf("no solution found")
 }

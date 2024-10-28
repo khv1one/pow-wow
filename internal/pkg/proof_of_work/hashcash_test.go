@@ -59,7 +59,6 @@ func TestSolveChallenge(t *testing.T) {
 		name      string
 		challenge entity.Challenge
 		nonce     string
-		wantErr   bool
 	}{
 		{
 			name: "Successfully solve challenge with low difficulty",
@@ -67,8 +66,7 @@ func TestSolveChallenge(t *testing.T) {
 				Task:       "test-challenge",
 				Difficulty: 3,
 			},
-			nonce:   "388",
-			wantErr: false,
+			nonce: "388",
 		},
 		{
 			name: "Solve challenge with higher difficulty",
@@ -76,25 +74,18 @@ func TestSolveChallenge(t *testing.T) {
 				Task:       "difficult-task",
 				Difficulty: 5,
 			},
-			nonce:   "747542",
-			wantErr: false,
+			nonce: "747542",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			nonce, err := SolveChallenge(tt.challenge)
-
-			if (err != nil) != tt.wantErr {
-				t.Errorf("SolveChallenge() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
+			nonce := SolveChallenge(tt.challenge)
 
 			// Verify that the nonce successfully passes the verifyPoW check
-			if !tt.wantErr {
-				assert.NotEmpty(t, nonce, "Nonce should not be empty")
-				assert.Equal(t, tt.nonce, nonce, "Nonce should match")
-				assert.True(t, verifyPoW(tt.challenge, nonce), "Solved nonce should pass the verifyPoW() check")
-			}
+			assert.NotEmpty(t, nonce, "Nonce should not be empty")
+			assert.Equal(t, tt.nonce, nonce, "Nonce should match")
+			assert.True(t, verifyPoW(tt.challenge, nonce), "Solved nonce should pass the verifyPoW() check")
+
 		})
 	}
 }
