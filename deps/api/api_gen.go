@@ -16,7 +16,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// VerifySolutionJSONBody defines parameters for VerifySolution.
+// VerifySolutionJSONBody defines parameters for ValidateProofOfWork.
 type VerifySolutionJSONBody struct {
 	// Challenge The challenge string provided by the api
 	Challenge *string `json:"challenge,omitempty"`
@@ -25,7 +25,7 @@ type VerifySolutionJSONBody struct {
 	Nonce *string `json:"nonce,omitempty"`
 }
 
-// VerifySolutionJSONRequestBody defines body for VerifySolution for application/json ContentType.
+// VerifySolutionJSONRequestBody defines body for ValidateProofOfWork for application/json ContentType.
 type VerifySolutionJSONRequestBody VerifySolutionJSONBody
 
 // ServerInterface represents all api handlers.
