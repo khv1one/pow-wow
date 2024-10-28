@@ -79,12 +79,8 @@ The project consists of:
    ```bash
    ./scripts/openapi-gen.sh
    ```
-   
-4. **Run Tests**:
-   ```bash
-   go test -json ./... 
-   ```
-5. **Generate mocks**:
+
+4. **Generate mocks**:
    ```bash
    ./scripts/mockery.sh
    ```
@@ -141,4 +137,7 @@ The client logic involves:
 
 ## Running Test
 
-You can run tests in project: 
+You can run tests in project:
+   ```bash
+   go test -json ./... 
+   ```
