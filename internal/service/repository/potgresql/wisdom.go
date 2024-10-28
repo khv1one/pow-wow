@@ -1,10 +1,13 @@
 package potgresql
 
 import (
-	"github.com/littlebugger/pow-wow/internal/service/entity"
-	"gorm.io/gorm"
+	"context"
 	"math/rand"
 	"time"
+
+	"gorm.io/gorm"
+
+	"github.com/littlebugger/pow-wow/internal/service/entity"
 )
 
 type PGWisdomRepository struct {
@@ -15,13 +18,13 @@ func NewPGWisdomRepository(db *gorm.DB) *PGWisdomRepository {
 	return &PGWisdomRepository{repo: db}
 }
 
-func (r PGWisdomRepository) ExpandWisdom() (string, error) {
+func (r PGWisdomRepository) ExpandWisdom(ctx context.Context) (string, error) {
 	// Seed the random number generator
 	rand.Seed(time.Now().UnixNano())
 
 	// Get the total number of quotes in the table
 	var count int
-	err := r.repo.Raw("SELECT COUNT(*) FROM quotes").Scan(&count).Error
+	err := r.repo.WithContext(ctx).Raw("SELECT COUNT(*) FROM quotes").Scan(&count).Error
 	if err != nil {
 		return "", err
 	}
@@ -36,7 +39,9 @@ func (r PGWisdomRepository) ExpandWisdom() (string, error) {
 
 	// Retrieve a random quote using a random offset in a raw SQL query
 	var selectedQuote entity.Quote
-	err = r.repo.Raw("SELECT id, quote, author FROM quotes OFFSET ? LIMIT 1", randomOffset).Scan(&selectedQuote).Error
+	err = r.repo.WithContext(ctx).
+		Raw("SELECT id, quote, author FROM quotes OFFSET ? LIMIT 1", randomOffset).
+		Scan(&selectedQuote).Error
 	if err != nil {
 		return "", err
 	}

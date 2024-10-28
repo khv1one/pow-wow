@@ -1,11 +1,17 @@
 package gateway
 
+import (
+	"context"
+	"github.com/google/uuid"
+	"github.com/littlebugger/pow-wow/internal/service/entity"
+)
+
 type Challenger interface {
-	MakeChallenge() (string, error)
+	MakeChallenge(ctx context.Context) (uuid.UUID, entity.Challenge, error)
 }
 
 type Supervisor interface {
-	Oversee(challenge, nonce string) (string, error)
+	Oversee(ctx context.Context, remark uuid.UUID, solution string) (string, error)
 }
 
 type Server struct {

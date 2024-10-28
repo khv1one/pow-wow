@@ -6,14 +6,14 @@ import (
 	"log"
 	"os"
 
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
-
 	"github.com/go-redis/redis/v8"
 	"github.com/labstack/echo/v4"
 	echo_mid "github.com/labstack/echo/v4/middleware"
-	"github.com/littlebugger/pow-wow/deps/api"
 	api_mid "github.com/oapi-codegen/echo-middleware"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
+
+	api "github.com/littlebugger/pow-wow/deps/api"
 )
 
 type App struct {

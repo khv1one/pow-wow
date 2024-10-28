@@ -1,0 +1,1 @@
+oapi-codegen -generate types,server,spec api/openapi/pow.yaml > deps/api/api_gen.go

@@ -1,9 +1,10 @@
 package main
 
 import (
+	"github.com/littlebugger/pow-wow/internal/service/repository/redis"
 	"log"
 
-	"github.com/littlebugger/pow-wow/deps/api"
+	api "github.com/littlebugger/pow-wow/deps/api"
 	"github.com/littlebugger/pow-wow/internal/pkg/proof_of_work"
 	"github.com/littlebugger/pow-wow/internal/service"
 	"github.com/littlebugger/pow-wow/internal/service/gateway"
@@ -29,10 +30,12 @@ func createServer(app *service.App) *gateway.Server {
 
 	// Storage for wisdom quotes.
 	repo := potgresql.NewPGWisdomRepository(app.Gorm)
+	rdb := redis.NewJournal(app.RDB)
+	journal := usecase.NewJournal(rdb)
 
 	// Use cases for emit challenges and check solutions.
-	challenger := usecase.NewChallenger(hashcash)
-	overseer := usecase.NewOverseer(hashcash, repo)
+	challenger := usecase.NewChallenger(hashcash, journal)
+	overseer := usecase.NewOverseer(hashcash, repo, journal)
 
 	// Create the api implementation
 	return gateway.NewServer(challenger, overseer)

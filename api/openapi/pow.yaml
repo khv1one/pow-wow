@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Word of Wisdom TCP Server
   version: 1.0.0
-  description: A TCP api protected by Proof of Work (PoW) that returns wisdom quotes after challenge verification.
+  description: A TCP api protected by Hashcash Proof of Work (PoW) that returns wisdom quotes after challenge verification.
 
 servers:
   - url: http://localhost:8080
@@ -11,24 +11,41 @@ servers:
 paths:
   /challenge:
     get:
-      summary: Get PoW challenge
+      summary: Get PoW Hashcash challenge
       operationId: GetChallenge
       responses:
         '200':
           description: Challenge generated successfully
+          headers:
+            X-Remark:
+              description: A unique identifier for the challenge
+              schema:
+                type: string
+                format: uuid
           content:
             application/json:
               schema:
                 type: object
                 properties:
+                  difficulty:
+                    type: integer
+                    description: Amount of leading zeroes in resulting hash
                   challenge:
                     type: string
                     description: The PoW challenge for the client to solve
 
   /verify:
     post:
-      summary: Verify PoW solution
+      summary: Verify Hashcash PoW solution
       operationId: VerifySolution
+      parameters:
+        - in: header
+          name: X-Remark
+          description: A unique identifier for the challenge to verify
+          required: true
+          schema:
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
