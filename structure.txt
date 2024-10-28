@@ -2,6 +2,7 @@ README.md
 gitignore:file
 api
 -openapi
+build
 cmd
 -app
 --main.go

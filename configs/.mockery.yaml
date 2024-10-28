@@ -1,0 +1,21 @@
+with-expecter: True
+inpackage: False
+dir: "{{.InterfaceDir}}/mocks"
+mockname: "Mock{{.InterfaceName}}"
+filename: "{{.InterfaceName | snakecase}}.go"
+outpkg: mocks
+all: True
+disable-version-string: True
+packages:
+  github.com/littlebugger/pow-wow:
+    internal/service:
+      gateway:
+        interfaces:
+          Challenger:
+          Overseer:
+      usecase:
+        interfaces:
+          Minter:
+          Verifier:
+          WisdomBearer:
+          WisdomRepository:
