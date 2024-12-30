@@ -99,6 +99,7 @@ INSERT INTO quotes (quote, author) VALUES
                                        ('Failure is the condiment that gives success its flavor.', 'Truman Capote'),
                                        ('Don''t let what you cannot do interfere with what you can do.', 'John R. Wooden'),
                                        ('You may have to fight a battle more than once to win it.', 'Margaret Thatcher');
+                                       ('Cheer up, dude. It’s Christmas.', 'The Grinch');
 
 -- +goose Down
 DELETE FROM quotes;
